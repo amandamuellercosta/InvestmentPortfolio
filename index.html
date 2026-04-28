@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Portfolio Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;background:#f5f5f3;color:#1a1a18}
+.hdr{background:#fff;border-bottom:1px solid #e5e5e0;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hdr-t{font-size:15px;font-weight:500}.hdr-s{font-size:11px;color:#888;margin-top:1px}
+.lbar{background:#eaf3de;border-bottom:1px solid #c0dd97;padding:6px 24px;display:flex;align-items:center;gap:10px;font-size:11px;flex-wrap:wrap}
+.ld{width:7px;height:7px;border-radius:50%;background:#2d6b0e;flex-shrink:0;display:inline-block;margin-right:4px}
+.ld.sp{background:#ba7517;animation:pulse 1s infinite}.ld.er{background:#a32d2d}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.rbtn{font-size:11px;padding:3px 10px;border-radius:5px;border:1px solid #c0dd97;cursor:pointer;background:#fff;color:#2d6b0e;font-weight:500}
+.rbtn:hover{background:#eaf3de}
+.mtabs{display:flex;background:#fff;border-bottom:1px solid #e5e5e0;padding:0 24px;overflow-x:auto}
+.mt{padding:11px 15px;font-size:12px;font-weight:500;cursor:pointer;color:#666;border-bottom:2px solid transparent;white-space:nowrap}
+.mt.active{color:#1a1a18;border-bottom-color:#1a1a18}
+.wrap{padding:20px 24px;max-width:1200px;margin:0 auto}
+.ptabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.pt{padding:6px 14px;border-radius:8px;border:1px solid #d5d5d0;font-size:12px;font-weight:500;cursor:pointer;background:#fff;color:#666}
+.pt.active{background:#f0f0ec;color:#1a1a18;border-color:#b5b5b0}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:16px}
+.mc{background:#f0f0ec;border-radius:8px;padding:10px 12px}
+.mc-l{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#888;margin-bottom:4px}
+.mc-v{font-size:18px;font-weight:500}.mc-s{font-size:11px;color:#888;margin-top:2px}
+.sls{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:16px}
+.sl{border-radius:8px;padding:12px 14px}
+.sl-l{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;opacity:.85}
+.sl-p{font-size:24px;font-weight:500;margin-bottom:2px}.sl-d{font-size:10px;opacity:.8}
+.cr{display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:16px}
+.cc{background:#fff;border:1px solid #e5e5e0;border-radius:10px;padding:14px}
+.ct{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:#888;margin-bottom:10px}
+.wb{padding:11px 14px;background:#fef3e2;border-radius:8px;margin-bottom:14px;font-size:11px;color:#7a4a0a;line-height:1.7;border:1px solid #f5d9a0}
+.wb b{font-weight:500;color:#5a3508}
+.thd{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:#888;padding:6px 12px 8px;border-bottom:1px solid #e5e5e0;margin-bottom:6px;display:grid;gap:6px}
+.ei{background:#fff;border:1px solid #e5e5e0;border-radius:8px;margin-bottom:5px;overflow:hidden}
+.em{display:grid;gap:6px;padding:9px 12px;cursor:pointer;align-items:center}
+.em:hover{background:#f8f8f6}
+.etc{display:flex;flex-direction:column;gap:2px}
+.etk{font-weight:500;font-size:13px}.enm{font-size:10px;color:#888}
+.fb{font-size:9px;padding:2px 6px;border-radius:3px;font-weight:500;display:inline-block;margin-top:2px}
+.wb2{display:flex;align-items:center;gap:5px}
+.wn{font-size:12px;font-weight:500;min-width:30px}
+.wbg{flex:1;height:4px;background:#e8e8e4;border-radius:2px;overflow:hidden}
+.wf{height:100%;border-radius:2px}
+.rp{color:#2d6b0e;font-weight:500;font-size:12px}
+.rn{color:#a32d2d;font-weight:500;font-size:12px}
+.rl{color:#aaa;font-size:11px}
+.cn{font-size:12px;color:#666;text-align:right}
+.cnb{font-size:12px;font-weight:500;text-align:right}
+.wbtn{font-size:10px;padding:3px 7px;border-radius:3px;border:1px solid #d5d5d0;cursor:pointer;background:#fff;color:#666;white-space:nowrap}
+.wbtn:hover{background:#f0f0ec}
+.rat{padding:12px 14px;background:#f8f8f6;border-top:1px solid #e5e5e0;font-size:12px;color:#444;line-height:1.7;display:none}
+.rat.open{display:block}
+.rtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.rtag{font-size:10px;padding:2px 7px;border-radius:3px;background:#fff;border:1px solid #e5e5e0;color:#555}
+.rk{font-size:11px;color:#888;margin-top:5px}
+.sec{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:#888;margin:14px 0 7px;padding-bottom:4px;border-bottom:1px solid #e5e5e0}
+.lb{font-size:9px;margin-left:4px;padding:1px 5px;border-radius:3px;background:#eaf3de;color:#2d6b0e;font-weight:500}
+.sb{font-size:9px;margin-left:4px;padding:1px 5px;border-radius:3px;background:#fde8e8;color:#a32d2d;font-weight:500}
+.stb{font-size:9px;margin-left:4px;padding:1px 5px;border-radius:3px;background:#f0f0ec;color:#888;font-weight:500}
+.spb{font-size:9px;margin-left:4px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#7a4a0a;font-weight:500}
+.cstb{font-size:9px;margin-left:4px;padding:1px 5px;border-radius:3px;background:#eeedfe;color:#534ab7;font-weight:500}
+.newb{font-size:9px;margin-left:4px;padding:1px 5px;border-radius:3px;background:#e1f5ee;color:#0f6e56;font-weight:500}
+.ctb{display:flex;align-items:center;gap:8px;padding:9px 12px;flex-wrap:wrap}
+.tinp{width:95px;padding:5px 7px;font-size:12px;border:1px solid #d5d5d0;border-radius:6px;outline:none;text-align:right}
+.tinp:focus{border-color:#888}
+.tbrs{flex:1;display:flex;flex-direction:column;gap:2px;min-width:80px}
+.tbl{font-size:9px;min-width:26px}
+.tbg{flex:1;height:4px;background:#e8e8e4;border-radius:2px;overflow:hidden}
+.tbf{height:100%;border-radius:2px}
+.dr{font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;min-width:46px;text-align:center;white-space:nowrap}
+.dok{background:#eaf3de;color:#2d6b0e}.dwn{background:#fef3e2;color:#7a4a0a}
+.dal{background:#fde8e8;color:#a32d2d}.dna{background:#f0f0ec;color:#888}
+.abox{background:#fff;border:1px solid #e5e5e0;border-radius:10px;padding:14px;margin-top:10px}
+.arow{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0ec;font-size:12px}
+.arow:last-child{border-bottom:none}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:10px;padding:14px;margin-bottom:12px}
+.lform{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld label{font-size:11px;color:#666}
+.fld select,.fld input{font-size:12px;padding:7px 9px;border:1px solid #d5d5d0;border-radius:8px;outline:none;background:#fff}
+.badd{padding:8px 12px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:#1a1a18;color:#fff;align-self:end;height:36px}
+.badd:hover{background:#333}
+.lt{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.lt th{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:#888;padding:6px 8px;border-bottom:1px solid #e5e5e0;text-align:left}
+.lt td{padding:7px 8px;border-bottom:1px solid #f0f0ec;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lt tr:last-child td{border-bottom:none}
+.db{font-size:11px;color:#888;cursor:pointer;padding:2px 6px;border-radius:3px;border:1px solid #e5e5e0;background:none}
+.db:hover{color:#a32d2d;border-color:#a32d2d}
+.empty{font-size:12px;color:#888;text-align:center;padding:32px}
+.nc{background:#fff;border:1px solid #e5e5e0;border-radius:10px;padding:13px 15px;margin-bottom:9px}
+.nt{font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;background:#e6f1fb;color:#0c447c;margin-right:5px}
+.ntitle{font-size:13px;font-weight:500;color:#1a1a18;margin:5px 0 3px;line-height:1.5}
+.ntitle a{color:#1a1a18;text-decoration:none}
+.ntitle a:hover{color:#185fa5;text-decoration:underline}
+.nmeta{font-size:11px;color:#888}
+.nflt{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.nf{padding:4px 12px;border-radius:20px;border:1px solid #d5d5d0;font-size:11px;cursor:pointer;background:#fff;color:#666}
+.nf.active{background:#1a1a18;color:#fff;border-color:#1a1a18}
+.ng{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.nload{text-align:center;padding:40px;color:#888;font-size:12px}
+.ci-box{background:#fff;border:1px solid #e5e5e0;border-radius:10px;padding:14px;margin-bottom:12px}
+.ci-row{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap}
+.ci-row input,.ci-row select{padding:7px 9px;font-size:12px;border:1px solid #d5d5d0;border-radius:8px;outline:none;background:#fff}
+.cpill{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 9px;border-radius:20px;background:#f0f0ec;border:1px solid #d5d5d0;margin:3px}
+.cpill button{background:none;border:none;cursor:pointer;color:#888;font-size:13px;line-height:1;padding:0;margin-left:2px}
+.cpill button:hover{color:#a32d2d}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.blist{display:flex;flex-direction:column;gap:6px}
+.bitem{display:flex;flex-direction:column;gap:2px}
+.blabel{display:flex;justify-content:space-between;font-size:11px}
+.bname{color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;margin-right:8px}
+.bval{font-weight:500;color:#1a1a18;white-space:nowrap}
+.btrack{height:5px;background:#e8e8e4;border-radius:2px;overflow:hidden}
+.bfill{height:100%;border-radius:2px}
+@media(max-width:680px){.cr{grid-template-columns:1fr}.ng{grid-template-columns:1fr}.breakdown-grid{grid-template-columns:1fr}.lform{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div><div class="hdr-t">My Portfolio Dashboard</div><div class="hdr-s">Portfolio A (CMC Markets · AUD) &amp; Portfolio B (Interactive Brokers · USD) · v4 — updated allocations Apr 2026</div></div>
+  <span style="font-size:11px;color:#888" id="saved">Loading...</span>
+</div>
+<div class="lbar">
+  <span class="ld sp" id="ldot"></span><span id="lstxt">Fetching live prices...</span>
+  <span id="ldet" style="color:#555"></span>
+  <button class="rbtn" onclick="fetchAll(true)">↻ Refresh</button>
+  <span id="lts" style="margin-left:auto;color:#888"></span>
+</div>
+<div class="mtabs">
+  <div class="mt active" onclick="go('dash')" id="mt-dash">Dashboard</div>
+  <div class="mt" onclick="go('myport')" id="mt-myport">My portfolio</div>
+  <div class="mt" onclick="go('track')" id="mt-track">Holdings tracker</div>
+  <div class="mt" onclick="go('dca')" id="mt-dca">DCA calculator</div>
+  <div class="mt" onclick="go('log')" id="mt-log">Purchase log</div>
+  <div class="mt" onclick="go('news')" id="mt-news">News feed</div>
+</div>
+<div class="wrap">
+  <div id="t-dash"></div>
+  <div id="t-myport" style="display:none"></div>
+  <div id="t-track" style="display:none"></div>
+  <div id="t-dca" style="display:none"></div>
+  <div id="t-log" style="display:none"></div>
+  <div id="t-news" style="display:none"></div>
+</div>
+<script>
+const TMAP={GOLD:'GOLD.AX',MVA:'MVA.AX',VHY:'VHY.AX',RFF:'RFF.AX',SEMI:'SEMI.AX',ASIA:'ASIA.AX',GEAR:'GEAR.AX',MI6:'MI6.AX',VMM:'VMM.AX',PLS:'PLS.AX',NDQ:'NDQ.AX',IOO:'IOO',IVV:'IVV'};
+function yt(t){return TMAP[t]||t;}
+let LD={},fetchIP=false,lastF=null,fetchErr={};
+
+// Fetch via Yahoo Finance quoteSummary page — extract JSON from the page source
+async function fetchViaPage(ticker){
+  const yfT=yt(ticker);
+  const url=`https://finance.yahoo.com/quote/${yfT}/`;
+  const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+  try{
+    const r=await fetch(proxy,{signal:AbortSignal.timeout(12000)});
+    if(!r.ok)return null;
+    const j=await r.json();
+    const html=j.contents||'';
+    if(html.length<1000)return null;
+
+    // Yahoo embeds data in multiple possible formats. Try all.
+    let price=null,ret1yr=null,dy=null;
+
+    // Pattern 1: "regularMarketPrice":{"raw":123.45} (older format, still sometimes present)
+    let m=html.match(/"regularMarketPrice":\{[^}]*"raw":([\d.]+)/);
+    if(m)price=parseFloat(m[1]);
+
+    // Pattern 2: "regularMarketPrice":123.45 (flat JSON)
+    if(!price){m=html.match(/"regularMarketPrice":([\d.]+)/);if(m)price=parseFloat(m[1]);}
+
+    // Pattern 3: data-field="regularMarketPrice" ... value="123.45"
+    if(!price){m=html.match(/data-field="regularMarketPrice"[^>]*value="([\d.]+)"/);if(m)price=parseFloat(m[1]);}
+
+    // Pattern 4: fin-streamer with data-value
+    if(!price){m=html.match(/data-field="regularMarketPrice"[^>]*data-value="([\d.]+)"/);if(m)price=parseFloat(m[1]);}
+
+    // 52-week change
+    m=html.match(/"fiftyTwoWeekChangePercent":\{[^}]*"raw":([-\d.]+)/);
+    if(m)ret1yr=parseFloat(m[1])*100;
+    if(ret1yr==null){m=html.match(/"fiftyTwoWeekChangePercent":([-\d.]+)/);if(m)ret1yr=parseFloat(m[1])*100;}
+
+    // Dividend yield
+    m=html.match(/"dividendYield":\{[^}]*"raw":([\d.]+)/)||html.match(/"trailingAnnualDividendYield":\{[^}]*"raw":([\d.]+)/);
+    if(m)dy=parseFloat(m[1])*100;
+    if(dy==null){m=html.match(/"dividendYield":([\d.]+)/);if(m)dy=parseFloat(m[1])*100;}
+
+    // Try extracting from the big JSON blob (root.App.main or similar)
+    if(!price){
+      m=html.match(/"quoteSummary":\{.*?"price":\{.*?"regularMarketPrice":\{[^}]*"raw":([\d.]+)/s);
+      if(m)price=parseFloat(m[1]);
+    }
+
+    if(price&&price>0)return{t:ticker,price,ret1yr,yield:dy,ok:true,src:'page'};
+  }catch(e){}
+  return null;
+}
+
+// Fetch via Yahoo v8 chart API (works when crumb not enforced)
+async function fetchViaChart(ticker){
+  const yfT=yt(ticker);
+  const url=`https://query1.finance.yahoo.com/v8/finance/chart/${yfT}?interval=1d&range=1y`;
+  const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+  try{
+    const r=await fetch(proxy,{signal:AbortSignal.timeout(10000)});
+    if(!r.ok)return null;
+    const j=await r.json();
+    if(!j.contents)return null;
+    const d=JSON.parse(j.contents);
+    const res=d?.chart?.result?.[0];if(!res)return null;
+    const meta=res.meta;
+    const cl=(res.indicators?.quote?.[0]?.close||[]).filter(v=>v!=null&&v>0);
+    if(cl.length<2)return null;
+    const last=meta.regularMarketPrice||cl[cl.length-1];
+    const ret=((last-cl[0])/cl[0])*100;
+    return{t:ticker,price:last,ret1yr:ret,yield:meta.dividendYield?meta.dividendYield*100:null,ok:true,src:'chart'};
+  }catch(e){}
+  return null;
+}
+
+// Fetch via Yahoo v6 quote endpoint (batch capable, basic data)
+async function fetchViaBatchQuote(tickers){
+  const yfTickers=tickers.map(t=>yt(t)).join(',');
+  const url=`https://query1.finance.yahoo.com/v6/finance/quote?symbols=${yfTickers}`;
+  const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+  try{
+    const r=await fetch(proxy,{signal:AbortSignal.timeout(12000)});
+    if(!r.ok)return{};
+    const j=await r.json();
+    if(!j.contents)return{};
+    const d=JSON.parse(j.contents);
+    const results=d?.quoteResponse?.result||[];
+    const out={};
+    results.forEach(q=>{
+      const orig=tickers.find(t=>yt(t)===q.symbol)||q.symbol;
+      out[orig]={
+        t:orig,
+        price:q.regularMarketPrice,
+        ret1yr:q.fiftyTwoWeekChangePercent!=null?q.fiftyTwoWeekChangePercent*100:null,
+        yield:q.dividendYield||q.trailingAnnualDividendYield?((q.dividendYield||q.trailingAnnualDividendYield)*100):null,
+        ok:true,src:'v6batch'
+      };
+    });
+    return out;
+  }catch(e){return{};}
+}
+
+// Master fetch per ticker
+async function fetchQ(t){
+  // Try chart API first (gives 1yr data), then page scraping
+  let result=await fetchViaChart(t);
+  if(result){delete fetchErr[t];return result;}
+  result=await fetchViaPage(t);
+  if(result){delete fetchErr[t];return result;}
+  fetchErr[t]=true;
+  return{t,ok:false};
+}
+
+async function fetchAll(force=false){
+  if(fetchIP)return;
+  if(!force&&lastF&&(Date.now()-lastF)<5*60*1000)return;
+  fetchIP=true;setLS('sp','Fetching live prices...');
+  const all=[...new Set([...PB.etfs.map(e=>e.t),...PA.etfs.map(e=>e.t),...Object.keys(customTickers)])];
+
+  // Strategy A: Try batch v6 quote for all tickers at once (fastest)
+  setLS('sp','Trying batch quote...');
+  const batchResult=await fetchViaBatchQuote(all);
+  const batchOk=Object.keys(batchResult).length;
+  if(batchOk>0){
+    Object.entries(batchResult).forEach(([t,r])=>{LD[t]=r;delete fetchErr[t];});
+  }
+
+  // Strategy B: For any tickers not loaded via batch, try individual fetch
+  const remaining=all.filter(t=>!LD[t]?.ok);
+  if(remaining.length>0&&remaining.length<all.length){
+    setLS('sp',`Batch loaded ${batchOk}. Fetching ${remaining.length} remaining...`);
+  }else if(remaining.length===all.length){
+    setLS('sp','Batch failed. Trying individual fetches...');
+  }
+
+  let done=0;
+  const BATCH=2;
+  for(let i=0;i<remaining.length;i+=BATCH){
+    const batch=remaining.slice(i,i+BATCH);
+    const res=await Promise.all(batch.map(t=>fetchQ(t)));
+    res.forEach(r=>{if(r.ok)LD[r.t]=r;});
+    done+=batch.length;
+    if(remaining.length>0)setLS('sp',`Fetching... ${batchOk+done}/${all.length}`);
+    if(i+BATCH<remaining.length)await new Promise(r=>setTimeout(r,600));
+  }
+
+  const ok=all.filter(t=>LD[t]?.ok).length;
+  const fail=all.length-ok;
+  lastF=Date.now();fetchIP=false;
+  if(ok>0){
+    setLS('ok',`${ok}/${all.length} prices loaded`);
+    document.getElementById('ldet').textContent=fail>0?`· ${fail} unavailable`:'';
+  }else{
+    setLS('er','Live data unavailable — all methods failed. Try refreshing later.');
+    document.getElementById('ldet').textContent='Proxies may be rate limited. Cached data shown if available.';
+  }
+  document.getElementById('lts').textContent='Updated '+new Date().toLocaleTimeString();
+  try{localStorage.setItem('ph_ld',JSON.stringify({d:LD,ts:lastF}));}catch(e){}
+  const at=document.querySelector('.mt.active')?.id?.replace('mt-','');
+  if(at==='dash')rdash();if(at==='track')rtrack();if(at==='news')rnews();
+}
+function setLS(s,m){const d=document.getElementById('ldot'),t=document.getElementById('lstxt');d.className='ld'+(s==='sp'?' sp':s==='er'?' er':'');t.textContent=m;}
+function gl(t){return LD[t]||null;}
+function fret(t){const d=gl(t);if(!d)return{tx:'…',cl:'rl',v:null};if(!d.ok||d.ret1yr==null)return{tx:'n/a',cl:'rl',v:null};const v=d.ret1yr;return{tx:(v>=0?'+':'')+v.toFixed(1)+'%',cl:v>=0?'rp':'rn',v};}
+function fpx(t){const d=gl(t);if(!d||!d.ok||!d.price)return'—';return d.price.toFixed(2);}
+
+const PB={
+  title:'Portfolio B',sub:'Income + growth — updated Apr 2026 (increased international)',
+  meta:{focus:'Income + Growth',risk:'Moderate',broker:'Interactive Brokers',cur:'USD',sym:'$'},
+  badges:[{l:'Income engine',bg:'#e1f5ee',c:'#0f6e56'},{l:'Factor tilt',bg:'#eeedfe',c:'#3c3489'},{l:'Increased international',bg:'#e6f1fb',c:'#0c447c'},{l:'~55% US exposure',bg:'#faeeda',c:'#633806'}],
+  yield:3.6,cov:'50+',er:0.22,hint:'VOO trimmed 20→13% · VXUS+IEMG+INDA+VWO boosted',
+  warn:'KWEB carries geopolitical risk — can lose 30–50% rapidly. Keep at 2% max. Use limit orders for EM ETFs on IB. VOO was trimmed from 20% to 13% to reduce US concentration.',
+  sl:[
+    {l:'Core US',p:13,e:'VOO',bg:'#e6f1fb',td:'#0c447c',tl:'#185fa5'},
+    {l:'Income',p:14,e:'JEPI+SCHD',bg:'#eaf3de',td:'#27500a',tl:'#3b6d11'},
+    {l:'REITs',p:10,e:'VNQ+VNQI',bg:'#faeeda',td:'#412402',tl:'#854f0b'},
+    {l:'International',p:28,e:'VXUS+IEMG+INDA+VWO+KWEB',bg:'#e1f5ee',td:'#04342c',tl:'#0f6e56'},
+    {l:'Factor/AVUV',p:7,e:'AVUV',bg:'#eeedfe',td:'#26215c',tl:'#534ab7'},
+    {l:'Infra+Defence',p:12,e:'SHLD+GRID+FTIF',bg:'#faece7',td:'#4a1b0c',tl:'#993c1d'},
+    {l:'Bonds',p:5,e:'BND',bg:'#f1efe8',td:'#2c2c2a',tl:'#5f5e5a'},
+  ],
+  sectors:[
+    {n:'Technology',p:26.8,col:'#185fa5'},
+    {n:'Financials',p:10.9,col:'#0c447c'},
+    {n:'Healthcare',p:10.2,col:'#0f6e56'},
+    {n:'Real estate',p:9.6,col:'#854f0b'},
+    {n:'Industrials',p:9.5,col:'#3b6d11'},
+    {n:'Consumer cyclical',p:7.4,col:'#ba7517'},
+    {n:'Comm. services',p:6.7,col:'#534ab7'},
+    {n:'Consumer defensive',p:5.7,col:'#993c1d'},
+    {n:'Bonds / fixed income',p:5.0,col:'#5f5e5a'},
+    {n:'Energy',p:3.8,col:'#888780'},
+    {n:'Infrastructure / grid',p:3.7,col:'#d85a30'},
+    {n:'Defence / aerospace',p:2.7,col:'#7f77dd'},
+    {n:'Utilities',p:2.2,col:'#1d9e75'},
+    {n:'Basic materials',p:1.8,col:'#b4b2a9'},
+  ],
+  countries:[
+    {n:'United States',p:55.2,col:'#185fa5'},
+    {n:'Japan',p:6.6,col:'#0f6e56'},
+    {n:'China',p:5.4,col:'#d85a30'},
+    {n:'United Kingdom',p:4.2,col:'#993c1d'},
+    {n:'India',p:4.1,col:'#ba7517'},
+    {n:'South Korea',p:3.6,col:'#534ab7'},
+    {n:'Taiwan',p:3.2,col:'#3b6d11'},
+    {n:'Canada',p:2.6,col:'#854f0b'},
+    {n:'France',p:2.1,col:'#888780'},
+    {n:'Germany',p:2.0,col:'#5f5e5a'},
+    {n:'Australia',p:1.2,col:'#1d9e75'},
+    {n:'Brazil',p:1.1,col:'#d4537e'},
+    {n:'Switzerland',p:1.0,col:'#7f77dd'},
+    {n:'Other EM',p:7.7,col:'#b4b2a9'},
+  ],
+  etfs:[
+    {t:'VOO',n:'Vanguard S&P 500 ETF',f:'Core US',p:13,er:0.03,sy:1.3,rat:'Trimmed from 20% to 13% to reduce US concentration and fund international expansion. Still the core S&P 500 anchor at a right-sized weight.',tags:['Trimmed 20→13%','S&P 500','ER 0.03%'],keys:'Nvidia · Apple · Microsoft · Amazon · Meta'},
+    {t:'JEPI',n:'JPMorgan Equity Premium Income ETF',f:'Income',p:7,er:0.35,sy:7.5,rat:'Monthly income via covered calls on S&P 500. ~7–8% yield. Best in volatile or sideways markets.',tags:['Monthly income','~7–8% yield','Covered calls'],keys:'S&P 500 + options overlay'},
+    {t:'SCHD',n:'Schwab US Dividend Equity ETF',f:'Income',p:7,er:0.06,sy:3.4,rat:'100 stocks with 10+ years dividend history. Income grows annually. 2026 reconstitution added UNH, QCOM — reduced energy, added healthcare and tech.',tags:['Growing dividends','2026 reconstituted','ER 0.06%'],keys:'Texas Instruments · UnitedHealth · Chevron · Merck'},
+    {t:'VNQ',n:'Vanguard Real Estate ETF',f:'REITs',p:5,er:0.13,sy:3.5,rat:'US REITs — data centres, cell towers, warehouses, healthcare. 90%+ income distributed to investors.',tags:['US REITs','~3.5% yield'],keys:'Prologis · American Tower · Equinix · Welltower'},
+    {t:'VNQI',n:'Vanguard Global ex-US Real Estate ETF',f:'REITs',p:5,er:0.12,sy:4.3,rat:'International REITs — Japan, Australia, Germany, Singapore. ~4.3% yield.',tags:['Global REITs','~4.3% yield'],keys:'Japan · Australia · Germany · Singapore'},
+    {t:'VXUS',n:'Vanguard Total International Stock ETF',f:'International',p:14,er:0.05,sy:2.7,rat:'Increased from 10% to 14%. 8,663 stocks across 47 countries. Ultra-cheap at 0.05%. Your international foundation — adds Japan, Europe, EM at minimal cost.',tags:['Increased 10→14%','8,663 stocks','ER 0.05%'],keys:'TSMC · ASML · Tencent · Samsung · Nestlé'},
+    {t:'IEMG',n:'iShares Core MSCI Emerging Markets ETF',f:'International',p:6,er:0.09,sy:2.6,rat:'Increased from 4% to 6%. Includes South Korea ~16% — Samsung + SK Hynix AI semiconductors. Strong EM performance driven by Korean chips.',tags:['Increased 4→6%','Includes S.Korea'],keys:'TSMC · Samsung · Tencent · SK Hynix · Alibaba'},
+    {t:'INDA',n:'iShares MSCI India ETF',f:'International',p:4,er:0.65,sy:0.6,rat:'Doubled from 2% to 4%. India is the world\'s fastest-growing major economy. GDP #3 by 2030. China+1 supply chain beneficiary. Strongest long-term structural case in Asia.',tags:['Doubled 2→4%','Fastest growing EM','GDP #3 by 2030'],keys:'Reliance · HDFC · Infosys · TCS · ICICI Bank'},
+    {t:'VWO',n:'Vanguard FTSE Emerging Markets ETF',f:'International',p:4,er:0.07,sy:2.7,rat:'Doubled from 2% to 4%. Broad EM — India ~20%, China ~25%, Brazil, Taiwan. No South Korea. Pairs with IEMG for complete EM coverage. Cheapest EM ETF at 0.07%.',tags:['Doubled 2→4%','EM ex-Korea','ER 0.07%'],keys:'TSMC · Tencent · Alibaba · HDFC · Reliance'},
+    {t:'KWEB',n:'KraneShares CSI China Internet ETF',f:'International',p:2,er:0.70,sy:0,spec:true,rat:'Alibaba, Tencent, Meituan, Baidu at ~17x P/E vs US tech 35x+. High risk/reward speculative position. Keep at 2% max.',tags:['Unchanged 2%','~17x P/E','High risk'],keys:'Alibaba · Tencent · Meituan · Baidu · PDD'},
+    {t:'AVUV',n:'Avantis US Small Cap Value ETF',f:'Factor/AVUV',p:7,er:0.25,sy:1.8,rat:'Small US companies cheap AND profitable. +81.3% over 5 years vs +20.5% for Russell 2000. Zero large-cap tech overlap — genuine diversification from VOO.',tags:['Small+cheap+profitable','+81% over 5yrs'],keys:'Small US industrials · financials · energy'},
+    {t:'SHLD',n:'Global X Defence Tech ETF',f:'Infra+Defence',p:4,er:0.50,sy:0.4,rat:'Drones, autonomous systems, cybersecurity, AI military. Structural defence spending theme. Global reach including European and Israeli names.',tags:['+57% in 2025','Drones+cyber+AI'],keys:'Palantir · AeroVironment · L3Harris · Elbit'},
+    {t:'GRID',n:'First Trust Clean Edge Smart Grid ETF',f:'Infra+Defence',p:5,er:0.56,sy:0.8,rat:'AI data centre power demand driving grid modernisation. Non-negotiable spending wave across both political parties.',tags:['AI power demand','Grid modernisation'],keys:'Eaton · Quanta Services · Itron · Advanced Energy'},
+    {t:'FTIF',n:'First Trust Indxx Global Natural Resources',f:'Infra+Defence',p:3,er:0.60,sy:3.2,rat:'Inflation hedge — energy, steel, materials. Ballast when equities fall on inflation fears.',tags:['Inflation hedge','Energy+steel'],keys:'Energy producers · steel mills · mining'},
+    {t:'BND',n:'Vanguard Total Bond Market ETF',f:'Bonds',p:5,er:0.03,sy:4.0,rat:'11,000+ US bonds. ~4% monthly income. The only true non-equity ballast in Portfolio B. Stability buffer in market downturns.',tags:['11,000+ bonds','~4% yield','Only bonds'],keys:'US Treasuries · investment-grade corporate · MBS'},
+  ]
+};
+
+const PA={
+  title:'Portfolio A',sub:'Australian-based growth + income + gold',
+  meta:{focus:'Growth + AU Income',risk:'Moderate–High',broker:'CMC Markets',cur:'AUD',sym:'A$'},
+  badges:[{l:'ASX-listed',bg:'#e6f1fb',c:'#0c447c'},{l:'Franking credits',bg:'#eaf3de',c:'#27500a'},{l:'Tax-deferred income',bg:'#eeedfe',c:'#3c3489'},{l:'Physical gold 19%',bg:'#faeeda',c:'#633806'}],
+  yield:5.9,cov:'AU + Global',er:0.28,hint:'Fresh cash: add to MVA, VHY, RFF first',
+  warn:'Mining specs (MI6, VMM, PLS) are hold-only — do not add monthly. GEAR uses leverage and amplifies losses.',
+  sl:[
+    {l:'Global equities',p:43,e:'IOO+IVV+NDQ',bg:'#e6f1fb',td:'#0c447c',tl:'#185fa5'},
+    {l:'Gold',p:20,e:'GOLD+GMN',bg:'#faeeda',td:'#412402',tl:'#854f0b'},
+    {l:'AU Income',p:17,e:'MVA+VHY+RFF',bg:'#eaf3de',td:'#04342c',tl:'#0f6e56'},
+    {l:'Mining specs',p:16,e:'MI6+VMM+PLS',bg:'#faece7',td:'#4a1b0c',tl:'#993c1d'},
+    {l:'Thematic',p:5,e:'SEMI+ASIA+GEAR',bg:'#eeedfe',td:'#26215c',tl:'#534ab7'},
+  ],
+  sectors:[
+    {n:'Technology',p:35.2,col:'#185fa5'},
+    {n:'Gold / precious metals',p:19.0,col:'#ba7517'},
+    {n:'AU real estate (REITs)',p:8.5,col:'#854f0b'},
+    {n:'Financials',p:8.2,col:'#0c447c'},
+    {n:'Materials / mining',p:8.0,col:'#888780'},
+    {n:'Healthcare',p:5.1,col:'#0f6e56'},
+    {n:'Consumer cyclical',p:5.0,col:'#d85a30'},
+    {n:'Comm. services',p:4.8,col:'#534ab7'},
+    {n:'Agriculture / water',p:4.3,col:'#3b6d11'},
+    {n:'Consumer defensive',p:3.2,col:'#993c1d'},
+    {n:'Lithium / critical minerals',p:3.5,col:'#7f77dd'},
+    {n:'Energy',p:2.4,col:'#5f5e5a'},
+    {n:'Industrials',p:2.8,col:'#1d9e75'},
+  ],
+  countries:[
+    {n:'United States',p:53.5,col:'#185fa5'},
+    {n:'Australia',p:23.8,col:'#0f6e56'},
+    {n:'Gold (no country)',p:11.0,col:'#ba7517'},
+    {n:'China',p:2.8,col:'#d85a30'},
+    {n:'Taiwan',p:2.4,col:'#534ab7'},
+    {n:'South Korea',p:1.8,col:'#3b6d11'},
+    {n:'United Kingdom',p:0.9,col:'#993c1d'},
+    {n:'Japan',p:0.8,col:'#854f0b'},
+    {n:'India',p:0.7,col:'#888780'},
+    {n:'Germany',p:0.5,col:'#5f5e5a'},
+    {n:'Netherlands',p:0.6,col:'#1d9e75'},
+    {n:'Other',p:1.2,col:'#b4b2a9'},
+  ],
+  etfs:[
+    {t:'IOO',n:'iShares Global 100 ETF',f:'Global equities',p:22,er:0.40,sy:1.4,rat:'100 largest global companies — Nvidia 12.7%, Apple 10.3%, Microsoft 8.2%. Primary growth engine. ~79% US, ~20% international.',tags:['Top 100 global','Nvidia 12.7%'],keys:'Nvidia · Apple · Microsoft · Amazon · Alphabet'},
+    {t:'IVV',n:'iShares S&P 500 ETF (ASX)',f:'Global equities',p:14,er:0.04,sy:1.3,rat:'S&P 500 in AUD via ASX. Ultra-low cost at 0.04%. Complements IOO by adding mid-large US names.',tags:['S&P 500','ER 0.04%','AUD'],keys:'Nvidia · Apple · Microsoft · Broadcom · Berkshire'},
+    {t:'NDQ',n:'BetaShares Nasdaq 100 ETF',f:'Global equities',p:7,er:0.22,sy:0.5,rat:'Pure Nasdaq-100 tech concentration. Highest-growth ETF in Portfolio A.',tags:['Nasdaq-100','Tech overweight'],keys:'Nvidia · Apple · Microsoft · Amazon · Meta'},
+    {t:'GOLD',n:'Global X Physical Gold ETF',f:'Gold',p:19,er:0.40,sy:0,rat:'Physical gold in vaults. +38% past year. At 19% your largest inflation/crisis hedge. Completely absent from Portfolio B — genuinely complementary.',tags:['Physical gold','Inflation hedge','~19% portfolio'],keys:'Physical gold bullion'},
+    {t:'MVA',n:'VanEck Australian Property ETF',f:'AU Income',p:6,er:0.35,sy:4.5,rat:'A-REIT ETF capped at 10% per holding. Tax-deferred distributions. +22% in 2025. AMMA statement annually for your accountant.',tags:['Tax-deferred','10% cap per REIT','+22% in 2025'],keys:'Scentre · GPT · Dexus · Mirvac · Stockland'},
+    {t:'VHY',n:'Vanguard Australian Shares High Yield ETF',f:'AU Income',p:5,er:0.25,sy:8.0,rat:'~7.6–8.4% yield. 79 Australian companies. ~42% franking credits reduce your tax. Fills the local income gap that IOO/IVV cannot.',tags:['~8% yield','42% franked','79 stocks'],keys:'BHP · CBA · NAB · Westpac · ANZ · Rio Tinto'},
+    {t:'RFF',n:'Rural Funds Group',f:'AU Income',p:6,er:0,sy:5.7,rat:'Agricultural REIT — almonds, macadamias, vineyards, cattle, water entitlements. Low beta 0.86. Completely uncorrelated income stream.',tags:['Agricultural land','Low beta 0.86','Water rights'],keys:'Almonds · Macadamias · Cattle · Water · Vineyards'},
+    {t:'SEMI',n:'Global X Semiconductor ETF',f:'Thematic',p:2.5,er:0.45,sy:0.5,rat:'Pure-play semiconductors: TSMC, ASML, Nvidia, Broadcom, Micron. Only 10 holdings — concentrated AI chip thesis.',tags:['10 holdings','AI semis','TSMC+Nvidia+ASML'],keys:'TSMC · ASML · Nvidia · Broadcom · Micron'},
+    {t:'ASIA',n:'BetaShares Asia Technology Tigers ETF',f:'Thematic',p:1.4,er:0.67,sy:1.2,rat:'50 largest Asian tech companies ex-Japan. +43.5% in 2025. Pure Asian internet and hardware exposure.',tags:['50 Asian stocks','+43.5% in 2025'],keys:'TSMC · Samsung · Tencent · Alibaba · Baidu'},
+    {t:'GEAR',n:'BetaShares Geared Australian Equity',f:'Thematic',p:1.3,er:0.80,sy:1.0,rat:'2x leveraged Australian equity. Tactical position only — amplifies both gains and losses.',tags:['2x leveraged','High risk'],keys:'BHP · CBA · CSL · WES · NAB (leveraged)'},
+    {t:'MI6',n:'Minerals 260',f:'Mining specs',p:6,er:0,sy:0,spec:true,rat:'Best performer at +466%. Critical minerals play — hold for the long term only. Do not add monthly.',tags:['HOLD only','+466% return','Critical minerals'],keys:'Critical minerals exposure'},
+    {t:'VMM',n:'Venture Minerals',f:'Mining specs',p:5,er:0,sy:0,spec:true,rat:'Speculative mining +171%. Hold only — do not add systematically.',tags:['HOLD only','+171% return'],keys:'Minerals exploration'},
+    {t:'PLS',n:'Pilbara Minerals',f:'Mining specs',p:3,er:0,sy:0,spec:true,rat:'Lithium producer +293%. EV battery thesis. Hold.',tags:['HOLD only','Lithium','+293% return'],keys:'Lithium hydroxide · spodumene concentrate'},
+  ]
+};
+
+function PORT(k){return k==='B'?PB:PA;}
+let CP='B',CDP='B',CLP='B',MPP='B',NF='ALL';
+let charts={};
+let holdings={A:{},B:{}};
+let purch={A:[],B:[]};
+let customTickers={};
+let newsCache={};
+let myPos={A:[],B:[]};
+
+function save(){
+  try{
+    localStorage.setItem('ph_h4',JSON.stringify(holdings));
+    localStorage.setItem('ph_p4',JSON.stringify(purch));
+    localStorage.setItem('ph_ct2',JSON.stringify(customTickers));
+    localStorage.setItem('ph_mp2',JSON.stringify(myPos));
+    document.getElementById('saved').textContent='Saved '+new Date().toLocaleTimeString();
+  }catch(e){}
+}
+function load(){
+  try{const h=localStorage.getItem('ph_h4');if(h)holdings=JSON.parse(h);}catch(e){}
+  try{const p=localStorage.getItem('ph_p4');if(p)purch=JSON.parse(p);}catch(e){}
+  try{const c=localStorage.getItem('ph_ct2');if(c)customTickers=JSON.parse(c);}catch(e){}
+  try{const m=localStorage.getItem('ph_mp2');if(m)myPos=JSON.parse(m);}catch(e){}
+  try{
+    const ld=localStorage.getItem('ph_ld');
+    if(ld){const o=JSON.parse(ld);LD=o.d||{};lastF=o.ts||null;
+      if(lastF&&(Date.now()-lastF)<30*60*1000){
+        setLS('ok','Prices from cache ('+new Date(lastF).toLocaleTimeString()+')');
+        document.getElementById('lts').textContent='Cached '+new Date(lastF).toLocaleTimeString();
+      }}
+  }catch(e){}
+  document.getElementById('saved').textContent='Data loaded';
+}
+
+function go(t){
+  ['dash','myport','track','dca','log','news'].forEach(id=>{
+    document.getElementById('t-'+id).style.display=id===t?'':'none';
+    document.getElementById('mt-'+id).className='mt'+(id===t?' active':'');
+  });
+  if(t==='dash')rdash();if(t==='myport')rmyport();if(t==='track')rtrack();if(t==='dca')rdca();if(t==='log')rlog();if(t==='news')rnews();
+}
+function sp(p){CP=p;rdash();}function stp(p){CP=p;rtrack();}function sdp(p){CDP=p;rdca();}function slp(p){CLP=p;rlog();}
+
+function ptabs(fn,cur){return`<div class="ptabs"><div class="pt${cur==='B'?' active':''}" onclick="${fn}('B')">Portfolio B — IB (USD)</div><div class="pt${cur==='A'?' active':''}" onclick="${fn}('A')">Portfolio A — CMC (AUD)</div></div>`;}
+
+function allEtfs(k){
+  const p=PORT(k);
+  const base=p.etfs.map(e=>({...e,custom:false}));
+  const cust=Object.entries(customTickers).filter(([t,v])=>v.port===k||v.port==='both').map(([t,v])=>({t,n:v.name||t,f:'Custom',p:0,er:0,sy:0,rat:v.note||'Custom position.',tags:['Custom'],keys:'—',custom:true}));
+  return[...base,...cust];
+}
+function loggedTickers(){return[...new Set([...(purch.B||[]).map(x=>x.ticker),...(purch.A||[]).map(x=>x.ticker)])];}
+function heldTickers(){return[...new Set([...Object.entries(holdings.B||{}).filter(([t,v])=>v>0).map(([t])=>t),...Object.entries(holdings.A||{}).filter(([t,v])=>v>0).map(([t])=>t)])];}
+function bret(){const p=PORT(CP);let ws=0,tw=0;p.etfs.forEach(e=>{const d=gl(e.t);if(d&&d.ok&&d.ret1yr!=null){ws+=e.p*d.ret1yr;tw+=e.p;}});return tw>0?ws/tw:null;}
+function tr(pfx,i){const el=document.getElementById('r-'+pfx+'-'+i);if(!el)return;el.classList.toggle('open');const b=el.previousElementSibling?.querySelector('.wbtn');if(b)b.textContent=el.classList.contains('open')?'Why ▴':'Why ▾';}
+
+function bdSection(items,title){
+  const max=Math.max(...items.map(x=>x.p));
+  let h=`<div class="cc"><div class="ct">${title}</div><div class="blist">`;
+  items.forEach(x=>{
+    h+=`<div class="bitem">
+      <div class="blabel"><span class="bname">${x.n}</span><span class="bval">${x.p.toFixed(1)}%</span></div>
+      <div class="btrack"><div class="bfill" style="width:${Math.round(x.p/max*100)}%;background:${x.col}"></div></div>
+    </div>`;
+  });
+  h+=`</div></div>`;
+  return h;
+}
+
+function rdash(){
+  const p=PORT(CP);const sym=p.meta.sym;
+  const amt=parseFloat(document.getElementById('ca-'+CP)?.value||10000);
+  const br=bret();
+  const lc=p.etfs.filter(e=>gl(e.t)?.ok).length;
+  const income=p.etfs.reduce((s,e)=>{const d=gl(e.t);const y=d?.ok&&d.yield!=null?d.yield:e.sy;return s+(amt*(e.p/100)*(y/100));},0);
+  const maxP=Math.max(...p.etfs.map(e=>e.p));
+  const cols='grid-template-columns:130px 90px 80px 50px 52px 80px 74px 65px 50px';
+
+  let h=ptabs('sp',CP);
+  h+=`<div style="margin-bottom:14px">
+    <div style="font-size:22px;font-weight:500;margin-bottom:4px">${p.title} <span style="font-weight:400;color:#666;font-size:15px">— ${p.sub}</span></div>
+    <div style="font-size:12px;color:#666;display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px">
+      <span><b style="color:#1a1a18;font-weight:500">Focus:</b> ${p.meta.focus}</span>
+      <span><b style="color:#1a1a18;font-weight:500">Risk:</b> ${p.meta.risk}</span>
+      <span><b style="color:#1a1a18;font-weight:500">Broker:</b> ${p.meta.broker}</span>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+      ${p.badges.map(b=>`<span style="font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;background:${b.bg};color:${b.c}">${b.l}</span>`).join('')}
+      <span style="font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;background:${lc===p.etfs.length?'#eaf3de':lc>0?'#fef3e2':'#fde8e8'};color:${lc===p.etfs.length?'#2d6b0e':lc>0?'#7a4a0a':'#a32d2d'}">${lc}/${p.etfs.length} live prices</span>
+    </div>
+  </div>`;
+
+  h+=`<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f0f0ec;border-radius:10px;margin-bottom:16px;flex-wrap:wrap">
+    <span style="font-size:12px;color:#666">Investment (${p.meta.cur}):</span>
+    <input type="number" id="ca-${CP}" style="width:140px;padding:7px 10px;font-size:14px;font-weight:500;border:1px solid #d5d5d0;border-radius:8px;outline:none;background:#fff" value="${amt}" min="1000" step="1000" oninput="rdash()">
+    <span style="font-size:11px;color:#999;margin-left:auto">${p.hint}</span>
+  </div>`;
+
+  h+=`<div class="g">
+    <div class="mc"><div class="mc-l">Invested</div><div class="mc-v">${sym}${amt.toLocaleString()}</div><div class="mc-s">${p.etfs.length} holdings</div></div>
+    <div class="mc"><div class="mc-l">Blended 1-yr ret</div><div class="mc-v" style="color:${br!=null?(br>=0?'#2d6b0e':'#a32d2d'):'#aaa'}">${br!=null?(br>=0?'+':'')+br.toFixed(2)+'%':'loading…'}</div><div class="mc-s">${br!=null?'live weighted avg':'fetching…'}</div></div>
+    <div class="mc"><div class="mc-l">Annual income</div><div class="mc-v">${sym}${Math.round(income).toLocaleString()}</div><div class="mc-s">${sym}${Math.round(income/12)}/mo</div></div>
+    <div class="mc"><div class="mc-l">Blended yield</div><div class="mc-v">${p.yield.toFixed(2)}%</div></div>
+    <div class="mc"><div class="mc-l">Coverage</div><div class="mc-v">${p.cov}</div></div>
+    <div class="mc"><div class="mc-l">Avg expense</div><div class="mc-v">${p.er.toFixed(2)}%</div></div>
+  </div>`;
+
+  h+=`<div class="sls">${p.sl.map(s=>`<div class="sl" style="background:${s.bg}"><div class="sl-l" style="color:${s.tl}">${s.l}</div><div class="sl-p" style="color:${s.td}">${s.p}%</div><div class="sl-d" style="color:${s.tl}">${s.e} · ${sym}${Math.round(amt*s.p/100).toLocaleString()}</div></div>`).join('')}</div>`;
+
+  h+=`<div class="wb"><b>Important:</b> ${p.warn}</div>`;
+
+  h+=`<div class="cr">
+    <div class="cc"><div class="ct">By sleeve</div>
+      <div style="position:relative;width:100%;height:155px"><canvas id="dn-${CP}" role="img" aria-label="Sleeve donut chart"></canvas></div>
+      <div style="margin-top:7px">${p.sl.map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;font-size:11px"><div style="display:flex;align-items:center;gap:5px;color:#666"><div style="width:8px;height:8px;border-radius:2px;background:${s.tl}"></div>${s.l}</div><span style="font-weight:500">${s.p}%</span></div>`).join('')}</div>
+    </div>
+    <div class="cc"><div class="ct">Holdings weight &amp; 1-yr return — live</div>
+      <div style="position:relative;width:100%;height:${Math.max(200,p.etfs.length*24)}px"><canvas id="br-${CP}" role="img" aria-label="Weight vs return bar chart"></canvas></div>
+    </div>
+  </div>`;
+
+  const sectors=p.sectors;const countries=p.countries;
+  const half=Math.ceil(sectors.length/2);
+  h+=`<div class="breakdown-grid">
+    ${bdSection(sectors.slice(0,half),'Sector breakdown (1/2)')}
+    ${bdSection(sectors.slice(half),'Sector breakdown (2/2)')}
+  </div>`;
+  const chalf=Math.ceil(countries.length/2);
+  h+=`<div class="breakdown-grid">
+    ${bdSection(countries.slice(0,chalf),'Country exposure (1/2)')}
+    ${bdSection(countries.slice(chalf),'Country exposure (2/2)')}
+  </div>`;
+
+  h+=`<div class="sec">Holdings — tap any row for rationale</div>
+  <div class="thd" style="${cols};padding:0 12px"><span>Ticker</span><span>Focus</span><span style="text-align:right">Weight</span><span style="text-align:right">ER</span><span style="text-align:right">Yield</span><span style="text-align:right">1-yr ret (live)</span><span style="text-align:right">${sym} invest</span><span style="text-align:right">Price</span><span></span></div>`;
+
+  p.etfs.forEach((e,i)=>{
+    const inv=amt*e.p/100;const ret=fret(e.t);const px=fpx(e.t);
+    const d=gl(e.t);const y=d?.ok&&d.yield!=null?d.yield.toFixed(1):e.sy>0?e.sy.toFixed(1):null;
+    const s=p.sl.find(s=>s.l===e.f||e.f.startsWith(s.l.split(' ')[0]))||p.sl[0];
+    const liveBadge=d?.ok?`<span class="lb">live</span>`:fetchErr[e.t]?`<span class="sb">error</span>`:`<span class="stb">pending</span>`;
+    const changed=e.tags.some(t=>t.includes('→'));
+    h+=`<div class="ei">
+      <div class="em" style="${cols}" onclick="tr('d',${i})">
+        <div class="etc"><span class="etk">${e.t}${e.spec?'<span class="spb">spec</span>':''}${liveBadge}${changed?'<span class="newb">updated</span>':''}</span><span class="enm">${e.n}</span></div>
+        <span><span class="fb" style="background:${s.bg};color:${s.td}">${e.f}</span></span>
+        <div class="wb2"><span class="wn">${e.p}%</span><div class="wbg"><div class="wf" style="width:${Math.round(e.p/maxP*100)}%;background:${s.tl}"></div></div></div>
+        <span class="cn">${e.er>0?e.er.toFixed(2)+'%':'—'}</span>
+        <span class="cn">${y?y+'%':'—'}</span>
+        <span class="${ret.cl}">${ret.tx}</span>
+        <span class="cnb">${sym}${Math.round(inv).toLocaleString()}</span>
+        <span class="cn">${px}</span>
+        <button class="wbtn" onclick="event.stopPropagation();tr('d',${i})">Why ▾</button>
+      </div>
+      <div class="rat" id="r-d-${i}">${e.rat}<div class="rk"><b>Key holdings:</b> ${e.keys}</div><div class="rtags">${e.tags.map(t=>`<span class="rtag">${t}</span>`).join('')}</div></div>
+    </div>`;
+  });
+
+  document.getElementById('t-dash').innerHTML=h;
+  requestAnimationFrame(()=>{ddn(CP,p);dbr(CP,p);});
+}
+
+function ddn(pk,p){
+  const id='dn-'+pk;if(charts[id])charts[id].destroy();
+  const ctx=document.getElementById(id);if(!ctx)return;
+  charts[id]=new Chart(ctx,{type:'doughnut',data:{labels:p.sl.map(s=>s.l),datasets:[{data:p.sl.map(s=>s.p),backgroundColor:p.sl.map(s=>s.tl),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.label+': '+c.parsed+'%'}}}}});
+}
+function dbr(pk,p){
+  const id='br-'+pk;if(charts[id])charts[id].destroy();
+  const ctx=document.getElementById(id);if(!ctx)return;
+  const slColors=p.etfs.map(e=>{const s=p.sl.find(s=>s.l===e.f||e.f.startsWith(s.l.split(' ')[0]))||p.sl[0];return s.tl;});
+  const rets=p.etfs.map(e=>{const d=gl(e.t);return d?.ok&&d.ret1yr!=null?parseFloat(d.ret1yr.toFixed(1)):null;});
+  charts[id]=new Chart(ctx,{type:'bar',data:{labels:p.etfs.map(e=>e.t),datasets:[
+    {label:'Weight %',data:p.etfs.map(e=>e.p),backgroundColor:slColors,yAxisID:'y',borderRadius:3},
+    {label:'1-yr return %',data:rets,type:'line',yAxisID:'y2',borderColor:'#378add',backgroundColor:'#378add',pointRadius:3,tension:0.3,fill:false,spanGaps:true}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},autoSkip:false,maxRotation:45},grid:{display:false}},y:{position:'left',ticks:{font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}},y2:{position:'right',ticks:{font:{size:10},callback:v=>v+'%'},grid:{display:false}}}}});
+}
+
+function rtrack(){
+  const p=PORT(CP);const sym=p.meta.sym;const held=holdings[CP]||{};
+  const all=allEtfs(CP);const tot=Object.values(held).reduce((s,v)=>s+v,0);
+  let on=0,dr=0,un=0;
+  all.forEach(e=>{const h=held[e.t]||0;if(!h){un++;return;}const a=tot?(h/tot)*100:0;Math.abs(a-e.p)<=3?on++:dr++;});
+  const needs=all.filter(e=>{const h=held[e.t]||0;if(!h||e.p===0)return false;const a=tot?(h/tot)*100:0;return Math.abs(a-e.p)>3;});
+  const maxP=Math.max(...all.map(e=>e.p),1);
+  const sls=[...new Set(all.map(e=>e.f))];
+  let h=ptabs('stp',CP);
+  h+=`<div class="ci-box">
+    <div style="font-size:13px;font-weight:500;margin-bottom:10px">Add a custom position</div>
+    <div class="ci-row">
+      <div><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Ticker</label><input type="text" id="ct-t" placeholder="e.g. AAPL" style="width:100px;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+      <div><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Name</label><input type="text" id="ct-n" placeholder="Apple Inc." style="width:160px"></div>
+      <div><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Portfolio</label><select id="ct-p" style="padding:7px 9px"><option value="B">Portfolio B</option><option value="A">Portfolio A</option><option value="both">Both</option></select></div>
+      <div><label style="font-size:11px;color:#666;display:block;margin-bottom:3px">Note</label><input type="text" id="ct-no" placeholder="Optional note" style="width:150px"></div>
+      <div style="display:flex;align-items:flex-end"><button class="badd" onclick="addCT()">Add</button></div>
+    </div>
+    ${Object.keys(customTickers).length>0?`<div style="margin-top:10px;display:flex;flex-wrap:wrap">${Object.entries(customTickers).map(([t,v])=>`<span class="cpill">${t}<span class="cstb">${v.port}</span><button onclick="removeCT('${t}')">×</button></span>`).join('')}</div>`:''}
+  </div>`;
+  h+=`<div class="g">
+    <div class="mc"><div class="mc-l">Total held</div><div class="mc-v">${sym}${Math.round(tot).toLocaleString()}</div></div>
+    <div class="mc"><div class="mc-l">On target</div><div class="mc-v" style="color:#2d6b0e">${on}</div><div class="mc-s">within ±3%</div></div>
+    <div class="mc"><div class="mc-l">Needs rebal</div><div class="mc-v" style="color:${dr>0?'#a87020':'#2d6b0e'}">${dr}</div><div class="mc-s">drifted &gt;3%</div></div>
+    <div class="mc"><div class="mc-l">Not started</div><div class="mc-v" style="color:#534ab7">${un}</div></div>
+  </div>
+  <p style="font-size:11px;color:#888;margin-bottom:10px">Enter current value of each holding. <span style="background:#eaf3de;color:#2d6b0e;padding:1px 6px;border-radius:3px;font-size:10px">green</span> = on target ±3% &nbsp;<span style="background:#fef3e2;color:#7a4a0a;padding:1px 6px;border-radius:3px;font-size:10px">orange</span> = drifted &gt;3% &nbsp;<span style="background:#fde8e8;color:#a32d2d;padding:1px 6px;border-radius:3px;font-size:10px">red</span> = drifted &gt;7%</p>`;
+  sls.forEach(sl=>{
+    const rows=all.filter(e=>e.f===sl);
+    const slh=rows.reduce((t,e)=>t+(held[e.t]||0),0);
+    h+=`<div class="sec">${sl} — ${sym}${Math.round(slh).toLocaleString()} held</div>`;
+    rows.forEach(e=>{
+      const hv=held[e.t]||0;const a=tot?(hv/tot)*100:0;
+      const drift=hv?a-e.p:null;const ad=drift!=null?Math.abs(drift):null;
+      let dc='dna',dl=hv?'0%':'not started';
+      if(drift!=null){if(ad<=3){dc='dok';dl=(drift>=0?'+':'')+drift.toFixed(1)+'%';}else if(ad<=7){dc='dwn';dl=(drift>=0?'+':'')+drift.toFixed(1)+'%';}else{dc='dal';dl=(drift>=0?'+':'')+drift.toFixed(1)+'%';}}
+      const ret=fret(e.t);const px=fpx(e.t);
+      const cb=e.custom?'<span class="cstb">custom</span>':'';
+      const changed=e.tags&&e.tags.some(t=>t.includes('→'))?'<span class="newb">updated</span>':'';
+      h+=`<div class="ei"><div class="ctb">
+        <span style="font-weight:500;font-size:12px;min-width:52px">${e.t}${cb}${changed}</span>
+        <input type="number" class="tinp" value="${hv||''}" placeholder="0" min="0" step="100" oninput="uh('${e.t}',this.value)">
+        <div class="tbrs">
+          <div style="display:flex;align-items:center;gap:4px"><span class="tbl" style="color:#2d6b0e">target</span><div class="tbg"><div class="tbf" style="width:${e.p>0?Math.min(100,e.p/maxP*100):0}%;background:#2d6b0e;opacity:.5"></div></div></div>
+          <div style="display:flex;align-items:center;gap:4px"><span class="tbl" style="color:#378add">actual</span><div class="tbg"><div class="tbf" style="width:${Math.min(100,a/maxP*100)}%;background:#378add"></div></div></div>
+        </div>
+        <span style="font-size:11px;color:#888;min-width:48px;text-align:center">${e.p>0?e.p+'% tgt':'custom'}</span>
+        <span style="font-size:12px;font-weight:500;min-width:42px;text-align:center">${a.toFixed(1)}%</span>
+        <span class="dr ${dc}">${dl}</span>
+        <span class="${ret.cl}" style="min-width:52px;text-align:right;font-size:11px">${ret.tx}</span>
+        <span style="font-size:11px;color:#888;min-width:44px;text-align:right">${px!=='—'?sym+px:''}</span>
+        <span style="font-size:11px;color:#888;min-width:60px;text-align:right">${sym}${Math.round(hv).toLocaleString()}</span>
+      </div></div>`;
+    });
+  });
+  if(needs.length){
+    h+=`<div class="abox"><div class="sec" style="margin-top:0;margin-bottom:7px">Action needed</div>`;
+    needs.forEach(e=>{const hv=held[e.t]||0;const a=tot?(hv/tot)*100:0;const d2=a-e.p;const ov=d2>0;h+=`<div class="arow"><span style="font-weight:500">${e.t}</span><span style="color:#666;font-size:11px">${ov?'Overweight — buy other positions instead':'Underweight — prioritise buying this next'}</span><span style="font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;background:${ov?'#fef3e2':'#fde8e8'};color:${ov?'#7a4a0a':'#a32d2d'}">${(d2>=0?'+':'')+d2.toFixed(1)}%</span></div>`;});
+    h+=`</div>`;
+  }
+  document.getElementById('t-track').innerHTML=h;
+  document.getElementById('ct-p').value=CP;
+}
+
+function uh(t,v){if(!holdings[CP])holdings[CP]={};holdings[CP][t]=parseFloat(v)||0;save();rtrack();}
+function addCT(){
+  const t=(document.getElementById('ct-t')?.value||'').trim().toUpperCase();if(!t)return;
+  customTickers[t]={name:document.getElementById('ct-n')?.value||t,port:document.getElementById('ct-p')?.value||'B',note:document.getElementById('ct-no')?.value||''};
+  save();fetchQ(t).then(r=>{if(r.ok)LD[r.t]=r;rtrack();});rtrack();
+}
+function removeCT(t){delete customTickers[t];save();rtrack();}
+
+function rdca(){
+  const p=PORT(CDP);const sym=p.meta.sym;
+  let h=ptabs('sdp',CDP);
+  h+=`<div class="card"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+    <span style="font-size:12px;color:#666">Monthly investment (${p.meta.cur}):</span>
+    <input type="number" style="width:120px;padding:6px 10px;font-size:13px;font-weight:500;border:1px solid #d5d5d0;border-radius:8px;outline:none" id="da-${CDP}" value="1000" min="100" step="100" oninput="rdca()">
+    <span style="font-size:12px;color:#666;margin-left:8px">Strategy:</span>
+    <select style="padding:6px 10px;font-size:12px;border:1px solid #d5d5d0;border-radius:8px;outline:none;background:#fff;width:190px" id="ds-${CDP}" onchange="rdca()">
+      <option value="target">Buy to target weight</option>
+      <option value="income">Income positions only</option>
+      <option value="equal">Equal split all</option>
+    </select>
+  </div>`;
+  const amt=parseFloat(document.getElementById('da-'+CDP)?.value||1000);
+  const strat=document.getElementById('ds-'+CDP)?.value||'target';
+  let elig=CDP==='A'?p.etfs.filter(e=>!e.spec):p.etfs;
+  if(strat==='income')elig=elig.filter(e=>e.sy>0);
+  const tp=elig.reduce((s,e)=>s+e.p,0);
+  const rows=elig.map(e=>({...e,buy:strat==='equal'?amt/elig.length:(e.p/tp)*amt}));
+  const mn=rows.length?rows.reduce((a,b)=>a.buy<b.buy?a:b):null;
+  const mx=rows.length?rows.reduce((a,b)=>a.buy>b.buy?a:b):null;
+  h+=`<div class="g" style="margin-bottom:14px">
+    <div class="mc"><div class="mc-l">Monthly total</div><div class="mc-v">${sym}${Math.round(amt).toLocaleString()}</div></div>
+    <div class="mc"><div class="mc-l">Positions</div><div class="mc-v">${rows.length}</div></div>
+    <div class="mc"><div class="mc-l">Smallest</div><div class="mc-v">${sym}${Math.round(mn?.buy||0)}</div><div class="mc-s">${mn?.t||''}</div></div>
+    <div class="mc"><div class="mc-l">Largest</div><div class="mc-v">${sym}${Math.round(mx?.buy||0)}</div><div class="mc-s">${mx?.t||''}</div></div>
+  </div>`;
+  const sls=[...new Set(rows.map(r=>r.f))];const mxP=Math.max(...rows.map(r=>r.p),1);
+  sls.forEach(sl=>{
+    const sr=rows.filter(r=>r.f===sl);const st2=sr.reduce((a,r)=>a+r.buy,0);
+    const sd=p.sl.find(x=>x.l===sl||sl.startsWith(x.l.split(' ')[0]))||p.sl[0];
+    h+=`<div class="sec">${sl} — ${sym}${Math.round(st2).toLocaleString()}</div>`;
+    sr.forEach(r=>{const ret=fret(r.t);h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;padding:8px 10px;background:#f8f8f6;border:1px solid #e5e5e0;border-radius:8px">
+      <span style="font-weight:500;font-size:12px;min-width:50px">${r.t}</span>
+      <span style="font-size:11px;color:#888;min-width:32px">${r.p}%</span>
+      <div style="flex:1;height:5px;background:#e8e8e4;border-radius:2px;overflow:hidden"><div style="width:${Math.min(100,r.p/mxP*100)}%;height:100%;background:${sd.tl};border-radius:2px"></div></div>
+      <span style="font-size:13px;font-weight:500;min-width:70px;text-align:right">${sym}${Math.round(r.buy).toLocaleString()}</span>
+      <span class="${ret.cl}" style="min-width:55px;text-align:right;font-size:11px">${ret.tx}</span>
+    </div>`;});
+  });
+  if(CDP==='A')h+=`<div style="margin-top:8px;padding:8px 12px;background:#fef3e2;border-radius:8px;font-size:11px;color:#7a4a0a;border:1px solid #f5d9a0">Mining specs excluded — hold-only positions.</div>`;
+  h+=`<div style="margin-top:12px;padding:11px 13px;background:#f8f8f6;border-radius:8px;font-size:11px;color:#555;line-height:1.7"><b>How to use:</b> Check Holdings Tracker first — buy red/orange positions (most underweight) first. Rebalance once a year by buying laggards, not selling (avoids CGT).</div></div>`;
+  document.getElementById('t-dca').innerHTML=h;
+}
+
+function rlog(){
+  const p=PORT(CLP);const sym=p.meta.sym;const all=allEtfs(CLP);
+  const list=purch[CLP]||[];const tot=list.reduce((s,x)=>s+x.amount,0);
+  let h=ptabs('slp',CLP);
+  h+=`<div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:12px">Record a purchase</div>
+  <div class="lform">
+    <div class="fld"><label>ETF / Ticker</label><select id="lt-${CLP}">${all.map(e=>`<option value="${e.t}">${e.t}${e.custom?' ★':''} — ${e.f}</option>`).join('')}</select></div>
+    <div class="fld"><label>Amount (${p.meta.cur})</label><input type="number" id="la-${CLP}" min="1" step="1" placeholder="e.g. 500"></div>
+    <div class="fld"><label>Price paid (optional)</label><input type="number" id="lp-${CLP}" min="0" step="0.01" placeholder="per unit"></div>
+    <div class="fld"><label>Date</label><input type="date" id="ld-${CLP}" value="${new Date().toISOString().slice(0,10)}"></div>
+    <button class="badd" onclick="ap()">Add</button>
+  </div>
+  <div style="font-size:11px;color:#888">★ = custom position. Add custom tickers in the Holdings Tracker tab first.</div>
+  </div>`;
+  h+=`<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <span style="font-size:13px;font-weight:500">Purchase history</span>
+    <span style="font-size:11px;color:#888">${list.length} purchases · ${sym}${Math.round(tot).toLocaleString()} total</span>
+  </div>`;
+  if(!list.length){h+=`<div class="empty">No purchases yet</div>`;}
+  else{
+    h+=`<table class="lt"><colgroup><col style="width:88px"><col style="width:60px"><col><col style="width:75px"><col style="width:75px"><col style="width:65px"></colgroup>
+    <thead><tr><th>Date</th><th>Ticker</th><th>Name</th><th>Amount</th><th>Price paid</th><th></th></tr></thead><tbody>`;
+    list.forEach(x=>{const e=all.find(e=>e.t===x.ticker)||{n:'—'};h+=`<tr><td style="color:#888">${x.date}</td><td style="font-weight:500">${x.ticker}</td><td style="color:#666">${e.n}</td><td>${sym}${Math.round(x.amount).toLocaleString()}</td><td style="color:#888">${x.price?sym+parseFloat(x.price).toFixed(2):'—'}</td><td><button class="db" onclick="dp(${x.id})">remove</button></td></tr>`;});
+    h+=`</tbody></table>`;
+  }
+  h+=`</div>`;
+  document.getElementById('t-log').innerHTML=h;
+}
+function ap(){
+  const port=CLP;const t=document.getElementById('lt-'+port)?.value;const a=parseFloat(document.getElementById('la-'+port)?.value);
+  const px=document.getElementById('lp-'+port)?.value;const d=document.getElementById('ld-'+port)?.value||new Date().toISOString().slice(0,10);
+  if(!t||!a||a<=0)return;
+  purch[port].unshift({ticker:t,amount:a,price:px||null,date:d,id:Date.now()});
+  if(!holdings[port])holdings[port]={};holdings[port][t]=(holdings[port][t]||0)+a;
+  save();rlog();
+}
+function dp(id){
+  const port=CLP;const i=purch[port].findIndex(p=>p.id===id);if(i===-1)return;
+  const x=purch[port][i];holdings[port][x.ticker]=Math.max(0,(holdings[port][x.ticker]||0)-x.amount);
+  purch[port].splice(i,1);save();rlog();
+}
+
+async function fetchNews(ticker){
+  if(newsCache[ticker]&&(Date.now()-newsCache[ticker].ts)<10*60*1000)return newsCache[ticker].items;
+  const newsUrl=`https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(yt(ticker))}&newsCount=8&quotesCount=0`;
+  const proxyUrl=`https://api.allorigins.win/get?url=${encodeURIComponent(newsUrl)}`;
+  try{
+    const r=await fetch(proxyUrl,{signal:AbortSignal.timeout(8000)});if(!r.ok)return[];
+    const j=await r.json();
+    const raw=JSON.parse(j.contents);
+    const items=(raw?.news||[]).slice(0,6).map(n=>({title:n.title,link:n.link,source:n.publisher||'',time:n.providerPublishTime?new Date(n.providerPublishTime*1000).toLocaleString('en-AU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'',ticker}));
+    newsCache[ticker]={items,ts:Date.now()};return items;
+  }catch(e){return[];}
+}
+
+async function rnews(){
+  const el=document.getElementById('t-news');
+  const tickers=[...new Set([...heldTickers(),...loggedTickers()])];
+  const filters=['ALL',...tickers];
+  let h=`<div style="font-size:16px;font-weight:500;margin-bottom:4px">News feed</div>
+  <div style="font-size:12px;color:#666;margin-bottom:14px">Latest news for your positions — Yahoo Finance · refreshes every 10 minutes</div>`;
+  if(!tickers.length){h+=`<div class="card"><div class="empty">No positions found. Log purchases in Purchase Log or enter holdings in Holdings Tracker.</div></div>`;el.innerHTML=h;return;}
+  h+=`<div class="nflt" id="nflt-row">${filters.map(f=>`<div class="nf${NF===f?' active':''}" onclick="setNF('${f}')">${f}</div>`).join('')}<button class="rbtn" onclick="newsCache={};rnews()" style="margin-left:4px">↻ Refresh</button></div>
+  <div id="news-body"><div class="nload">Loading news...</div></div>`;
+  el.innerHTML=h;
+  await loadNews(NF,tickers);
+}
+async function loadNews(filter,tickers){
+  const toFetch=filter==='ALL'?tickers:[filter];
+  const allNews=[];
+  await Promise.all(toFetch.map(async t=>{const items=await fetchNews(t);allNews.push(...items);}));
+  const nb=document.getElementById('news-body');if(!nb)return;
+  if(!allNews.length){nb.innerHTML=`<div class="card"><div class="empty">No news found for ${filter==='ALL'?'your positions':filter}.</div></div>`;return;}
+  let html=`<div class="ng">`;
+  allNews.forEach(item=>{html+=`<div class="nc"><div><span class="nt">${item.ticker}</span><span style="font-size:11px;font-weight:500;color:#555">${item.source}</span></div><div class="ntitle"><a href="${item.link||'#'}" target="_blank" rel="noopener">${item.title||'Untitled'}</a></div><div class="nmeta">${item.time}</div></div>`;});
+  html+=`</div>`;nb.innerHTML=html;
+}
+function setNF(f){
+  NF=f;document.querySelectorAll('.nf').forEach(el=>{el.className='nf'+(el.textContent.trim()===f?' active':'');});
+  const nb=document.getElementById('news-body');if(nb)nb.innerHTML=`<div class="nload">Loading...</div>`;
+  const tickers=[...new Set([...heldTickers(),...loggedTickers()])];
+  loadNews(f,tickers);
+}
+
+// ── MY PORTFOLIO ──────────────────────────────────────────────────────────
+function smp(p){MPP=p;rmyport();}
+
+function rmyport(){
+  const port=MPP;
+  const p=PORT(port);
+  const sym=p.meta.sym;
+  const positions=myPos[port]||[];
+  const allE=allEtfs(port);
+
+  // Calculate values
+  let totalCost=0,totalValue=0;
+  const rows=positions.map(pos=>{
+    const cost=pos.units*pos.avgPrice;
+    const live=gl(pos.ticker);
+    const livePrice=live?.ok?live.price:null;
+    const manualPrice=pos.manualPrice||null;
+    const curPrice=manualPrice||livePrice||null;
+    const priceSource=manualPrice?'manual':livePrice?'live':'none';
+    const curValue=curPrice?pos.units*curPrice:cost;
+    const gain=curPrice?(curValue-cost):0;
+    const gainPct=cost>0&&curPrice?((curValue-cost)/cost)*100:null;
+    totalCost+=cost;
+    totalValue+=curPrice?curValue:cost;
+    return{...pos,cost,curPrice,livePrice,manualPrice,priceSource,curValue,gain,gainPct};
+  });
+
+  const totalGain=totalValue-totalCost;
+  const totalGainPct=totalCost>0?((totalValue-totalCost)/totalCost)*100:0;
+  const posCount=rows.length;
+  const winners=rows.filter(r=>r.gain>0).length;
+  const losers=rows.filter(r=>r.gain<0).length;
+
+  let h=`<div class="ptabs">
+    <div class="pt${MPP==='B'?' active':''}" onclick="smp('B')">Portfolio B — IB (USD)</div>
+    <div class="pt${MPP==='A'?' active':''}" onclick="smp('A')">Portfolio A — CMC (AUD)</div>
+  </div>`;
+
+  // Add position form
+  h+=`<div class="card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:4px">Add a position</div>
+    <div style="font-size:11px;color:#888;margin-bottom:12px">Enter each holding — ticker, units held, and your average price paid per unit</div>
+    <div style="display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 1fr auto;gap:8px;align-items:end">
+      <div class="fld"><label>Ticker</label>
+        <select id="mp-ticker-${port}" onchange="document.getElementById('mp-custom-wrap-${port}').style.display=this.value==='__custom__'?'':'none'">
+          ${allE.map(e=>`<option value="${e.t}">${e.t} — ${e.n}</option>`).join('')}
+          <option value="__custom__">+ Custom ticker</option>
+        </select>
+      </div>
+      <div class="fld"><label>Units held</label><input type="number" id="mp-units-${port}" min="0.01" step="0.01" placeholder="e.g. 50"></div>
+      <div class="fld"><label>Avg price paid</label><input type="number" id="mp-price-${port}" min="0.01" step="0.01" placeholder="per unit"></div>
+      <div class="fld" id="mp-custom-wrap-${port}" style="display:none"><label>Custom ticker</label><input type="text" id="mp-custom-${port}" placeholder="e.g. TSLA" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+      <button class="badd" onclick="addPos()">Add</button>
+    </div>
+  </div>`;
+
+  // No inline script needed — onchange handles visibility
+
+  if(!rows.length){
+    h+=`<div class="card"><div class="empty">No positions added yet. Add your holdings above to see your real portfolio dashboard.</div></div>`;
+    document.getElementById('t-myport').innerHTML=h;return;
+  }
+
+  // Summary cards
+  h+=`<div class="g">
+    <div class="mc"><div class="mc-l">Total value</div><div class="mc-v">${sym}${Math.round(totalValue).toLocaleString()}</div><div class="mc-s">${posCount} positions</div></div>
+    <div class="mc"><div class="mc-l">Total cost</div><div class="mc-v">${sym}${Math.round(totalCost).toLocaleString()}</div><div class="mc-s">invested</div></div>
+    <div class="mc"><div class="mc-l">Total gain/loss</div><div class="mc-v" style="color:${totalGain>=0?'#2d6b0e':'#a32d2d'}">${totalGain>=0?'+':''}${sym}${Math.round(Math.abs(totalGain)).toLocaleString()}</div><div class="mc-s">${totalGain>=0?'+':''}${totalGainPct.toFixed(1)}%</div></div>
+    <div class="mc"><div class="mc-l">Winners / losers</div><div class="mc-v"><span style="color:#2d6b0e">${winners}</span> / <span style="color:#a32d2d">${losers}</span></div><div class="mc-s">of ${posCount} positions</div></div>
+  </div>`;
+
+  // Allocation donut + bar
+  h+=`<div class="cr">
+    <div class="cc"><div class="ct">Your actual allocation</div>
+      <div style="position:relative;width:100%;height:160px"><canvas id="mp-donut-${port}"></canvas></div>
+      <div style="margin-top:8px">`;
+  rows.forEach(r=>{
+    const pct=totalValue>0?(r.curValue/totalValue*100):0;
+    h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;font-size:11px">
+      <span style="color:#666">${r.ticker}</span>
+      <span style="font-weight:500">${pct.toFixed(1)}%</span>
+    </div>`;
+  });
+  h+=`</div></div>
+    <div class="cc"><div class="ct">Gain / loss by position</div>
+      <div style="position:relative;width:100%;height:${Math.max(180,rows.length*28)}px"><canvas id="mp-gainbar-${port}"></canvas></div>
+    </div>
+  </div>`;
+
+  // Actual vs target allocation
+  const targetEtfs=p.etfs;
+  h+=`<div class="cc" style="margin-bottom:16px"><div class="ct">Actual vs target allocation</div>`;
+  const maxTgt=Math.max(...targetEtfs.map(e=>e.p),1);
+  targetEtfs.forEach(e=>{
+    const pos=rows.find(r=>r.ticker===e.t);
+    const actualPct=pos&&totalValue>0?(pos.curValue/totalValue*100):0;
+    const tgtW=Math.min(100,e.p/maxTgt*100);
+    const actW=Math.min(100,actualPct/maxTgt*100);
+    const drift=actualPct-e.p;
+    const driftCls=Math.abs(drift)<=3?'dok':Math.abs(drift)<=7?'dwn':'dal';
+    h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="font-weight:500;font-size:11px;min-width:48px">${e.t}</span>
+      <div class="tbrs">
+        <div style="display:flex;align-items:center;gap:4px"><span class="tbl" style="color:#2d6b0e">tgt ${e.p}%</span><div class="tbg"><div class="tbf" style="width:${tgtW}%;background:#2d6b0e;opacity:.45"></div></div></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="tbl" style="color:#378add">act ${actualPct.toFixed(1)}%</span><div class="tbg"><div class="tbf" style="width:${actW}%;background:#378add"></div></div></div>
+      </div>
+      <span class="dr ${pos?driftCls:'dna'}" style="min-width:52px">${pos?(drift>=0?'+':'')+drift.toFixed(1)+'%':'—'}</span>
+    </div>`;
+  });
+  // Custom positions not in target
+  rows.filter(r=>!targetEtfs.find(e=>e.t===r.ticker)).forEach(r=>{
+    const pct=totalValue>0?(r.curValue/totalValue*100):0;
+    h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="font-weight:500;font-size:11px;min-width:48px">${r.ticker}<span class="cstb">custom</span></span>
+      <div class="tbrs">
+        <div style="display:flex;align-items:center;gap:4px"><span class="tbl" style="color:#888">no target</span><div class="tbg"></div></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="tbl" style="color:#378add">act ${pct.toFixed(1)}%</span><div class="tbg"><div class="tbf" style="width:${Math.min(100,pct/maxTgt*100)}%;background:#534ab7"></div></div></div>
+      </div>
+      <span class="dr dna">${pct.toFixed(1)}%</span>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  // Sector + country breakdown (weighted by actual $ values)
+  const sectorMap={},countryMap={};
+  rows.forEach(r=>{
+    const etfDef=p.etfs.find(e=>e.t===r.ticker);
+    if(!etfDef)return;
+    const weight=totalValue>0?r.curValue/totalValue:0;
+    // Find sector/country data from portfolio definition
+    const portSectors=p.sectors||[];
+    const portCountries=p.countries||[];
+    const tgtPct=etfDef.p;
+    const totalTgt=p.etfs.reduce((s,e)=>s+e.p,0);
+    const etfShare=tgtPct/totalTgt;
+    // Approximate: scale portfolio sector data by this position's actual weight vs expected weight
+    const scaleFactor=tgtPct>0?weight/etfShare:0;
+    portSectors.forEach(s=>{sectorMap[s.n]=(sectorMap[s.n]||0)+s.p*scaleFactor/p.etfs.length*2;});
+    portCountries.forEach(c=>{countryMap[c.n]=(countryMap[c.n]||0)+c.p*scaleFactor/p.etfs.length*2;});
+  });
+
+  // Holdings table
+  h+=`<div class="sec">Your positions — ${posCount} holdings</div>
+  <div style="font-size:11px;color:#888;margin-bottom:8px">💡 If a price is wrong or missing, type the current price in the "Cur. price" field — it overrides live data and saves.</div>`;
+  const maxVal=Math.max(...rows.map(r=>r.curValue),1);
+  rows.forEach((r,i)=>{
+    const pct=totalValue>0?(r.curValue/totalValue*100):0;
+    const etfDef=allE.find(e=>e.t===r.ticker);
+    const srcBadge=r.priceSource==='manual'?'<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:#eeedfe;color:#534ab7;font-weight:500;margin-left:3px">manual</span>':r.priceSource==='live'?'<span class="lb">live</span>':'<span class="stb">cost basis</span>';
+    h+=`<div class="ei"><div style="display:grid;grid-template-columns:70px 1fr 65px 70px 70px 80px 90px 60px 30px;gap:5px;padding:10px 12px;align-items:center">
+      <div>
+        <div style="font-weight:500;font-size:13px">${r.ticker}${srcBadge}</div>
+        <div style="font-size:10px;color:#888">${etfDef?.n||r.ticker}</div>
+      </div>
+      <div class="wb2"><div class="wbg"><div class="wf" style="width:${Math.round(r.curValue/maxVal*100)}%;background:${r.gain>=0?'#3b6d11':'#a32d2d'}"></div></div></div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:#888">${r.units} units</div>
+        <div style="font-size:10px;color:#aaa">@${sym}${r.avgPrice.toFixed(2)}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#888">Cur. price</div>
+        <input type="number" style="width:65px;padding:3px 5px;font-size:11px;border:1px solid ${r.priceSource==='manual'?'#b0a8e0':'#d5d5d0'};border-radius:4px;outline:none;text-align:right;background:${r.priceSource==='manual'?'#f8f7fe':'#fff'}" value="${r.curPrice?r.curPrice.toFixed(2):''}" placeholder="${r.avgPrice.toFixed(2)}" min="0" step="0.01" onchange="setManualPrice(${i},this.value)">
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#888">Cost</div>
+        <div style="font-size:12px;font-weight:500">${sym}${Math.round(r.cost).toLocaleString()}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#888">Value</div>
+        <div style="font-size:12px;font-weight:500">${sym}${Math.round(r.curValue).toLocaleString()}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:${r.gain>=0?'#2d6b0e':'#a32d2d'}">${r.gain>=0?'+':'−'}${sym}${Math.round(Math.abs(r.gain)).toLocaleString()}</div>
+        <div style="font-size:12px;font-weight:500;color:${r.gainPct!=null?(r.gainPct>=0?'#2d6b0e':'#a32d2d'):'#888'}">${r.gainPct!=null?(r.gainPct>=0?'+':'')+r.gainPct.toFixed(1)+'%':'—'}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#888">Alloc</div>
+        <div style="font-size:12px;font-weight:500">${pct.toFixed(1)}%</div>
+      </div>
+      <button class="db" onclick="removePos(${i})" title="Remove position">×</button>
+    </div></div>`;
+  });
+
+  h+=`<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="badd" onclick="if(confirm('Clear all positions in this portfolio?')){myPos[MPP]=[];save();rmyport();}">Clear all</button>
+  </div>`;
+
+  h+=`<div style="font-size:11px;color:#888;margin-top:16px;line-height:1.6;padding-top:12px;border-top:1px solid #e5e5e0">
+    Current value uses live prices when available, otherwise uses your cost basis. Gain/loss is unrealised — calculated as (current price × units) minus (avg price paid × units). Allocation shows each position as a % of total portfolio value. Data saved locally in your browser. Not financial advice.
+  </div>`;
+
+  document.getElementById('t-myport').innerHTML=h;
+
+  // Draw charts
+  requestAnimationFrame(()=>{
+    // Donut
+    const dId='mp-donut-'+port;
+    if(charts[dId])charts[dId].destroy();
+    const dCtx=document.getElementById(dId);
+    if(dCtx&&rows.length){
+      const colors=['#185fa5','#3b6d11','#854f0b','#0f6e56','#534ab7','#993c1d','#ba7517','#888780','#d85a30','#7f77dd','#1d9e75','#d4537e','#5f5e5a','#b4b2a9','#639922'];
+      charts[dId]=new Chart(dCtx,{type:'doughnut',data:{
+        labels:rows.map(r=>r.ticker),
+        datasets:[{data:rows.map(r=>r.curValue),backgroundColor:rows.map((_,i)=>colors[i%colors.length]),borderWidth:2,borderColor:'#fff'}]
+      },options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const v=c.parsed;const pct=totalValue>0?(v/totalValue*100).toFixed(1):'0';return' '+c.label+': '+sym+Math.round(v).toLocaleString()+' ('+pct+'%)';}}}}}});
+    }
+    // Gain bar
+    const bId='mp-gainbar-'+port;
+    if(charts[bId])charts[bId].destroy();
+    const bCtx=document.getElementById(bId);
+    if(bCtx&&rows.length){
+      charts[bId]=new Chart(bCtx,{type:'bar',data:{
+        labels:rows.map(r=>r.ticker),
+        datasets:[{label:'Gain/Loss %',data:rows.map(r=>r.gainPct!=null?parseFloat(r.gainPct.toFixed(1)):0),backgroundColor:rows.map(r=>r.gain>=0?'#3b6d11':'#a32d2d'),borderRadius:3}]
+      },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.x>=0?'+':''}${c.parsed.x.toFixed(1)}%`}}},scales:{x:{ticks:{font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.05)'}},y:{ticks:{font:{size:11}},grid:{display:false}}}}});
+    }
+  });
+}
+
+function addPos(){
+  const port=MPP;
+  let ticker=document.getElementById('mp-ticker-'+port)?.value;
+  if(ticker==='__custom__'){
+    ticker=(document.getElementById('mp-custom-'+port)?.value||'').trim().toUpperCase();
+    if(!ticker)return;
+  }
+  const units=parseFloat(document.getElementById('mp-units-'+port)?.value);
+  const avgPrice=parseFloat(document.getElementById('mp-price-'+port)?.value);
+  if(!ticker||!units||units<=0||!avgPrice||avgPrice<=0)return;
+
+  // Check if position already exists — merge
+  const existing=myPos[port].find(p=>p.ticker===ticker);
+  if(existing){
+    const totalCost=existing.units*existing.avgPrice+units*avgPrice;
+    existing.units+=units;
+    existing.avgPrice=totalCost/existing.units;
+  }else{
+    myPos[port].push({ticker,units,avgPrice,date:new Date().toISOString().slice(0,10)});
+  }
+
+  // Also update holdings tracker
+  if(!holdings[port])holdings[port]={};
+  const live=gl(ticker);
+  const curVal=live?.ok?units*live.price:units*avgPrice;
+  holdings[port][ticker]=(holdings[port][ticker]||0)+curVal;
+
+  save();
+  // Fetch price for this ticker if not already loaded
+  if(!gl(ticker)?.ok){
+    fetchQ(ticker).then(r=>{if(r.ok)LD[r.t]=r;rmyport();});
+  }
+  rmyport();
+}
+
+function removePos(i){
+  const port=MPP;
+  if(i<0||i>=myPos[port].length)return;
+  myPos[port].splice(i,1);
+  save();rmyport();
+}
+
+function setManualPrice(i,val){
+  const port=MPP;
+  if(i<0||i>=myPos[port].length)return;
+  const v=parseFloat(val);
+  if(v&&v>0){
+    myPos[port][i].manualPrice=v;
+  }else{
+    delete myPos[port][i].manualPrice;
+  }
+  save();rmyport();
+}
+
+load();rdash();fetchAll();
+</script>
+</body>
+</html>
